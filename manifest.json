@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Next Devtools",
+  "version": "1.0.0",
+  "minimum_chrome_version": "10.0",
+  "action": {
+    "default_icon": {
+      "16": "public/icon.png",
+      "32": "public/icon.png",
+      "48": "public/icon.png",
+      "128": "public/icon.png"
+    },
+    "default_popup": "src/popup.html"
+  },
+  "background": {
+    "service_worker": "src/service-worker.ts"
+  },
+  "permissions": ["tabs", "scripting"],
+  "host_permissions": ["https://*/*", "http://*/*"]
+}
