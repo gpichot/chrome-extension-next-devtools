@@ -1,0 +1,122 @@
+.object {
+  font-size: 0.9rem;
+  font-family: monospace;
+}
+.objectBody,
+.array {
+  padding-left: 1em;
+}
+
+.objectProperty {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.objectPropertyIsExpandable .objectPropertyHeader {
+  cursor: pointer;
+}
+
+.objectPropertyKey {
+  flex: 0 0 auto;
+  margin-right: 0.5em;
+  color: #333333;
+  @media (prefers-color-scheme: dark) {
+    color: #dddddd;
+  }
+
+  &:after {
+    content: ":";
+  }
+}
+
+.objectPropertyOneLine {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.objectPropertyHeader {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.objectPropertyValue {
+  display: none;
+}
+
+.objectPropertySize {
+  margin-left: 0.5em;
+}
+
+.objectPropertyValueExpanded {
+  display: block;
+}
+
+.objectPropertyLength {
+  color: #888888;
+  @media (prefers-color-scheme: dark) {
+    color: #bbbbbb;
+  }
+}
+
+.number {
+  color: #ff8c00;
+}
+
+.null {
+  color: #999999;
+}
+
+.boolean {
+  color: #0000ff;
+}
+
+.string {
+  color: #008000;
+  @media (prefers-color-scheme: dark) {
+    color: #00aa00;
+  }
+}
+
+.sizeLabel {
+  margin-right: 0.5em;
+}
+
+.sizeLabelSmall {
+  color: #448844;
+  @media (prefers-color-scheme: dark) {
+    color: #88cc88;
+  }
+}
+.sizeLabelMedium {
+  color: #888800;
+  @media (prefers-color-scheme: dark) {
+    color: #cccc00;
+  }
+}
+.sizeLabelLarge {
+  color: #880000;
+  @media (prefers-color-scheme: dark) {
+    color: #cc0000;
+  }
+}
+
+.objectPropertySizeSmall > .objectPropertyHeader > .objectPropertyKey {
+  // color: #448844;
+}
+
+.objectPropertySizeMedium > .objectPropertyHeader > .objectPropertyKey {
+  font-weight: bold;
+  color: #888800;
+  @media (prefers-color-scheme: dark) {
+    color: #cccc00;
+  }
+}
+
+.objectPropertySizeLarge > .objectPropertyHeader > .objectPropertyKey {
+  font-weight: bold;
+  color: #880000;
+  @media (prefers-color-scheme: dark) {
+    color: #ffcccc;
+  }
+}

@@ -1,17 +1,14 @@
-import { humanizeSize } from "./utils";
+import { getSizeThreshold, humanizeSize } from "./utils";
 
 function getNextData() {
   return document.querySelector("#__NEXT_DATA__")?.textContent;
 }
 
 function getColor(size: number) {
-  if (size < 10 * 1024) {
-    return "green";
-  } else if (size < 100 * 1024) {
-    return "yellow";
-  } else {
-    return "red";
-  }
+  const threshold = getSizeThreshold(size);
+  if (threshold === 0) return "green";
+  if (threshold === 1) return "orange";
+  return "red";
 }
 
 const tabPageProps = new Map<number, string>();

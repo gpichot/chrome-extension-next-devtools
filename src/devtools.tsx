@@ -1,13 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import classnames from "classnames";
 
-import { humanizeSize } from "./utils";
+import "./globals.css";
 
-type PagePropsRequest = {
-  url: string;
-  status: number;
-  content: unknown;
-};
+import PropsRequestTable from "./components/PropsRequestTable";
+import { PagePropsRequest } from "./types";
+
+import styles from "./devtools.module.scss";
+
 type Listener = (request: PagePropsRequest) => void;
 
 const emitter = {
@@ -23,10 +24,31 @@ const emitter = {
   },
 };
 
+function useDarkMode() {
+  const [prefersDarkMode, setPrefersDarkMode] = React.useState(false);
+
+  React.useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    console.log(mediaQuery);
+    setPrefersDarkMode(mediaQuery.matches);
+
+    const onChange = (e: MediaQueryListEvent) => {
+      setPrefersDarkMode(e.matches);
+    };
+    mediaQuery.addEventListener("change", onChange);
+
+    return () => mediaQuery.removeEventListener("change", onChange);
+  }, []);
+
+  return prefersDarkMode;
+}
+
 function App() {
   const [pagePropsList, setPagePropsList] = React.useState<PagePropsRequest[]>(
     []
   );
+
+  const prefersDarkMode = useDarkMode();
 
   React.useEffect(() => {
     emitter.addListener((request) => {
@@ -35,25 +57,16 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <table>
-        <thead>
-          <tr>
-            <th>URL</th>
-            <th>Status</th>
-            <th>Content Size</th>
-          </tr>
-        </thead>
-        <tbody>
-          {pagePropsList.map((request) => (
-            <tr key={request.url}>
-              <td>{request.url}</td>
-              <td>{request.status}</td>
-              <td>{humanizeSize(JSON.stringify(request.content).length)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div
+      className={classnames(styles.app, {
+        [styles.appDark]: prefersDarkMode,
+      })}
+    >
+      {pagePropsList.length === 0 ? (
+        <div>No props requests yet</div>
+      ) : (
+        <PropsRequestTable requests={pagePropsList} />
+      )}
     </div>
   );
 }
@@ -77,9 +90,12 @@ chrome.devtools.network.onNavigated.addListener((url) => {
 });
 chrome.devtools.network.onRequestFinished.addListener((request) => {
   if (request.request.url.includes("/_next/data")) {
+    // cut at /_next/data
+    const url = request.request.url.split("/_next/data")[1];
+    const path = url.split("/").slice(2).join("/");
     request.getContent((content) => {
       emitter.emit({
-        url: request.request.url,
+        url: `/${path}`,
         status: request.response.status,
         content: JSON.parse(content),
       });

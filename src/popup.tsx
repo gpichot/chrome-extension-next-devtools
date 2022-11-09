@@ -1,7 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import { humanizeSize } from "./utils";
+import "./globals.css";
+
+import JsonTree from "./components/JsonTree";
 
 import styles from "./popup.module.scss";
 
@@ -25,24 +27,13 @@ function App() {
     return JSON.parse(pageProps);
   }, [pageProps]);
 
-  console.log(pagePropsOb, pageProps);
-
   if (!pagePropsOb) {
     return <div>Not a page with a table</div>;
   }
 
   return (
     <div className={styles.container}>
-      <table>
-        <tbody>
-          {Object.entries(pagePropsOb).map(([key, value]) => (
-            <tr key={key}>
-              <td>{key}</td>
-              <td>{humanizeSize(JSON.stringify(value).length)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <JsonTree data={pagePropsOb} />
     </div>
   );
 }
