@@ -1,0 +1,24 @@
+:global(body) {
+  margin: 0;
+}
+.masterDetail {
+  display: flex;
+  flex-direction: row nowrap;
+  height: 100vh;
+  align-items: stretch;
+}
+
+.master,
+.detail {
+  padding: 0.25rem 0.5rem;
+}
+
+.master {
+  flex: 3 0;
+}
+
+.detail {
+  flex: 1 0;
+  background-color: #444444;
+  border-left: 1px solid #555555;
+}

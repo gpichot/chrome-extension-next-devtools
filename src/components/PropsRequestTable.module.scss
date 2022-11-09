@@ -1,0 +1,20 @@
+.table {
+  border-collapse: collapse;
+
+  th {
+    text-align: left;
+  }
+
+  td,
+  th {
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: #444444;
+  }
+}
+.table tbody tr.requestRowSelected {
+  background-color: #666666;
+}

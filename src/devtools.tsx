@@ -4,7 +4,9 @@ import classnames from "classnames";
 
 import "./globals.css";
 
+import DevToolsApp from "./components/DevToolsApp";
 import PropsRequestTable from "./components/PropsRequestTable";
+import { installStyles } from "./devtoolsStyles";
 import { PagePropsRequest } from "./types";
 
 import styles from "./devtools.module.scss";
@@ -24,31 +26,10 @@ const emitter = {
   },
 };
 
-function useDarkMode() {
-  const [prefersDarkMode, setPrefersDarkMode] = React.useState(false);
-
-  React.useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    console.log(mediaQuery);
-    setPrefersDarkMode(mediaQuery.matches);
-
-    const onChange = (e: MediaQueryListEvent) => {
-      setPrefersDarkMode(e.matches);
-    };
-    mediaQuery.addEventListener("change", onChange);
-
-    return () => mediaQuery.removeEventListener("change", onChange);
-  }, []);
-
-  return prefersDarkMode;
-}
-
 function App() {
   const [pagePropsList, setPagePropsList] = React.useState<PagePropsRequest[]>(
     []
   );
-
-  const prefersDarkMode = useDarkMode();
 
   React.useEffect(() => {
     emitter.addListener((request) => {
@@ -56,19 +37,7 @@ function App() {
     });
   }, []);
 
-  return (
-    <div
-      className={classnames(styles.app, {
-        [styles.appDark]: prefersDarkMode,
-      })}
-    >
-      {pagePropsList.length === 0 ? (
-        <div>No props requests yet</div>
-      ) : (
-        <PropsRequestTable requests={pagePropsList} />
-      )}
-    </div>
-  );
+  return <DevToolsApp requests={pagePropsList} />;
 }
 
 chrome.devtools.panels.create(
@@ -81,6 +50,8 @@ chrome.devtools.panels.create(
         window.document.getElementById("root") as HTMLElement
       );
       root.render(<App />);
+
+      installStyles(window.document);
     });
   }
 );

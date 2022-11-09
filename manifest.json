@@ -3,7 +3,7 @@
   "name": "Next Devtools",
   "version": "1.0.0",
   "minimum_chrome_version": "10.0",
-  "devtools_page": "src/devtools.html",
+  "devtools_page": "src/next-devtools.html",
   "action": {
     "default_icon": {
       "16": "public/icon.png",
