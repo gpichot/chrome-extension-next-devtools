@@ -7,14 +7,14 @@ module.exports = {
     "@semantic-release/release-notes-generator",
     "@semantic-release/npm",
     "@semantic-release/github",
-    //     [
-    //       "@semantic-release/git",
-    //       {
-    //         assets: ["CHANGELOG.md", "package.json", "yarn.lock"],
-    //         message:
-    //           "chore(release): ${nextRelease.version} [publish]\n\n${nextRelease.notes}",
-    //       },
-    //     ],
+    [
+      "@semantic-release/git",
+      {
+        assets: ["CHANGELOG.md", "package.json", "yarn.lock"],
+        message:
+          "chore(release): ${nextRelease.version} [publish]\n\n${nextRelease.notes}",
+      },
+    ],
   ],
   publish: ["@semantic-release/github"],
 };
