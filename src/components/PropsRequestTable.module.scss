@@ -1,5 +1,13 @@
 .table {
+  width: 100%;
   border-collapse: collapse;
+
+  thead {
+    border-bottom: 1px solid #e5e5e5;
+    @media (prefers-color-scheme: dark) {
+      border-bottom: 1px solid #55555544;
+    }
+  }
 
   th {
     text-align: left;
@@ -9,12 +17,37 @@
   th {
     cursor: pointer;
     padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+    &:not(:last-child) {
+      border-right: 1px solid #e5e5e5;
+      @media (prefers-color-scheme: dark) {
+        border-right: 1px solid #55555544;
+      }
+    }
   }
 
   tbody tr:nth-child(odd) {
-    background-color: #444444;
+    background-color: #f0f0f0;
+    @media (prefers-color-scheme: dark) {
+      background-color: #444444;
+    }
   }
 }
 .table tbody tr.requestRowSelected {
-  background-color: #666666;
+  background-color: #e0f0ff;
+  @media (prefers-color-scheme: dark) {
+    background-color: #1a73e8;
+  }
+}
+
+.table tbody tr:not(.requestRowSelected) {
+  &.requestRowSizeSmall :last-child {
+  }
+  &.requestRowSizeMedium :last-child {
+    background-color: #c28149;
+  }
+  &.requestRowSizeLarge :last-child {
+    // even darker
+    background-color: #e57373;
+  }
 }

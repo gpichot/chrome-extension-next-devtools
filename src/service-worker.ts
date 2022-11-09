@@ -65,7 +65,6 @@ chrome.tabs.onActivated.addListener(({ tabId }) => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "getTab") {
-    console.log("tab", currentTab.id);
     if (!currentTab.id) return sendResponse({ pageProps: null });
     const pageProps = tabPageProps.get(currentTab.id);
     sendResponse({ pageProps });

@@ -81,9 +81,9 @@ function SizeLabel({ size }: { size: number }) {
   return (
     <span
       className={classnames(styles.sizeLabel, {
-        [styles.sizeLabelSmall]: threshold === 0,
-        [styles.sizeLabelMedium]: threshold === 1,
-        [styles.sizeLabelLarge]: threshold === 2,
+        [styles.sizeLabelSmall]: threshold === "small",
+        [styles.sizeLabelMedium]: threshold === "medium",
+        [styles.sizeLabelLarge]: threshold === "large",
       })}
     >
       {humanizeSize(size, {
@@ -114,9 +114,9 @@ function JsonTreeObjectProperty(props: {
       className={classnames(styles.objectProperty, {
         [styles.objectPropertyOneLine]: isPrimitiveValue,
         [styles.objectPropertyIsExpandable]: isExpandable,
-        [styles.objectPropertySizeSmall]: sizeThreshold === 0,
-        [styles.objectPropertySizeMedium]: sizeThreshold === 1,
-        [styles.objectPropertySizeLarge]: sizeThreshold === 2,
+        [styles.objectPropertySizeSmall]: sizeThreshold === "small",
+        [styles.objectPropertySizeMedium]: sizeThreshold === "medium",
+        [styles.objectPropertySizeLarge]: sizeThreshold === "large",
       })}
     >
       <div

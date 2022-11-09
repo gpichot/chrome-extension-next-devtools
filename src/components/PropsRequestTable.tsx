@@ -2,7 +2,7 @@ import React from "react";
 import classnames from "classnames";
 
 import { PagePropsRequest } from "@/types";
-import { humanizeSize } from "@/utils";
+import { getSizeThreshold, humanizeSize } from "@/utils";
 
 import styles from "./PropsRequestTable.module.scss";
 
@@ -11,6 +11,32 @@ type PropsRequestTableProps = {
   onSelectRequest?: (request: PagePropsRequest) => void;
   selectedRequest: PagePropsRequest | null;
 };
+
+function RequestRow({
+  request,
+  isSelected,
+  onSelectRequest,
+}: { request: PagePropsRequest; isSelected: boolean } & Pick<
+  PropsRequestTableProps,
+  "onSelectRequest"
+>) {
+  const size = JSON.stringify(request.content.pageProps).length;
+  const sizeThreshold = getSizeThreshold(size);
+  return (
+    <tr
+      className={classnames({
+        [styles.requestRowSelected]: isSelected,
+        [styles.requestRowSizeSmall]: sizeThreshold === "small",
+        [styles.requestRowSizeMedium]: sizeThreshold === "medium",
+        [styles.requestRowSizeLarge]: sizeThreshold === "large",
+      })}
+      onClick={() => onSelectRequest?.(request)}
+    >
+      <td>{request.url}</td>
+      <td>{humanizeSize(size)}</td>
+    </tr>
+  );
+}
 
 export default function PropsRequestTable({
   requests,
@@ -27,16 +53,12 @@ export default function PropsRequestTable({
       </thead>
       <tbody>
         {requests.map((request) => (
-          <tr
+          <RequestRow
             key={request.url}
-            className={classnames({
-              [styles.requestRowSelected]: request === selectedRequest,
-            })}
-            onClick={() => onSelectRequest?.(request)}
-          >
-            <td>{request.url}</td>
-            <td>{humanizeSize(JSON.stringify(request.content).length)}</td>
-          </tr>
+            request={request}
+            isSelected={selectedRequest === request}
+            onSelectRequest={onSelectRequest}
+          />
         ))}
       </tbody>
     </table>

@@ -18,6 +18,7 @@
 .objectPropertyKey {
   flex: 0 0 auto;
   margin-right: 0.5em;
+  padding: 0.25em 0;
   color: #333333;
   @media (prefers-color-scheme: dark) {
     color: #dddddd;
@@ -26,6 +27,9 @@
   &:after {
     content: ":";
   }
+}
+.objectPropertyValue {
+  padding: 0.25em 0;
 }
 
 .objectPropertyOneLine {

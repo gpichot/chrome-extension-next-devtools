@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import classnames from "classnames";
 
-import "./globals.css";
+import "./devtools.css";
 
 import DevToolsApp from "./components/DevToolsApp";
 import PropsRequestTable from "./components/PropsRequestTable";
@@ -37,7 +37,18 @@ function App() {
     });
   }, []);
 
-  return <DevToolsApp requests={pagePropsList} />;
+  React.useEffect(() => {
+    const themeName = chrome.devtools.panels.themeName;
+
+    document.body.classList.add(`themeName-${themeName}`);
+  }, []);
+
+  return (
+    <DevToolsApp
+      requests={pagePropsList}
+      themeName={chrome.devtools.panels.themeName}
+    />
+  );
 }
 
 chrome.devtools.panels.create(
@@ -64,11 +75,16 @@ chrome.devtools.network.onRequestFinished.addListener((request) => {
     // cut at /_next/data
     const url = request.request.url.split("/_next/data")[1];
     const path = url.split("/").slice(2).join("/");
+
     request.getContent((content) => {
+      const json = JSON.parse(content);
+
+      if (!json.pageProps) return;
+
       emitter.emit({
         url: `/${path}`,
         status: request.response.status,
-        content: JSON.parse(content),
+        content: json,
       });
     });
   }

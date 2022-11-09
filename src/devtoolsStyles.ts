@@ -3,7 +3,6 @@ const getStyles = () => {
 };
 export function installStyles(targetDocument: Document) {
   // Watch for style changes in dev mode
-  console.log(process.env.NODE_ENV);
   if (process.env.NODE_ENV === "development") {
     watchStyles(targetDocument);
   }
@@ -29,12 +28,11 @@ function watchStyles(targetDocument: Document) {
           targetDocument.head.appendChild(newStyle);
         }
 
-        // Text case we check if parent is a style tag
+        // Text case, we check if parent is a style tag
         if (
           node.nodeName === "#text" &&
           node.parentElement?.nodeName === "STYLE"
         ) {
-          // Remove old if exist
           const newStyle = node.parentElement as HTMLStyleElement;
           const id = newStyle.getAttribute("data-vite-dev-id");
           const oldStyle = targetDocument.querySelector(

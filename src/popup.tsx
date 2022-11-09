@@ -16,7 +16,6 @@ function App() {
 
   React.useEffect(() => {
     chrome.runtime.sendMessage({ type: "getTab" }, (message) => {
-      console.log("message", message);
       const { pageProps } = message;
       setPageProps(pageProps);
     });

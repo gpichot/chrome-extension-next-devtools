@@ -1,3 +1,5 @@
+import { SizeThreshold } from "./types";
+
 const unitsShortcuts = ["o", "k", "M"];
 const units = ["oc", "ko", "Mo"];
 export function humanizeSize(size: number, { unitShortcuts = true } = {}) {
@@ -8,8 +10,8 @@ export function humanizeSize(size: number, { unitShortcuts = true } = {}) {
   return `${value}${unitShortcuts ? "" : " "}${unit}`;
 }
 
-export function getSizeThreshold(size: number) {
-  if (size < 10 * 1024) return 0;
-  if (size < 100 * 1024) return 1;
-  return 2;
+export function getSizeThreshold(size: number): SizeThreshold {
+  if (size < 10 * 1024) return "small";
+  if (size < 100 * 1024) return "medium";
+  return "large";
 }
