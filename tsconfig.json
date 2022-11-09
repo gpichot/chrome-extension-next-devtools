@@ -19,14 +19,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "./manifest.json",
-    "src",
-    "__mocks__",
-    "./*.js",
-    "./*.cjs",
-    "./*.ts"
-  ],
+  "include": ["src", "__mocks__", "./*.js", "./*.cjs", "./*.ts"],
   "references": [
     {
       "path": "./tsconfig.node.json"

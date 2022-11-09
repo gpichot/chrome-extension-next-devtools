@@ -17,5 +17,16 @@
     "service_worker": "src/service-worker.ts"
   },
   "permissions": ["tabs", "scripting"],
-  "host_permissions": ["https://*/*", "http://*/*"]
+  "host_permissions": ["https://*/*", "http://*/*"],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "src/next-devtools.html",
+        "src/popup.html",
+        "src/panel.html"
+      ],
+      "matches": ["<all_urls>"],
+      "extension_ids": []
+    }
+  ]
 }

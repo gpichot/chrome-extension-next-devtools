@@ -1,17 +1,21 @@
-const getStyles = () => {
-  return document.querySelectorAll('style[type="text/css"]');
-};
 export function installStyles(targetDocument: Document) {
   // Watch for style changes in dev mode
   if (process.env.NODE_ENV === "development") {
     watchStyles(targetDocument);
+    const styles = document.querySelectorAll('style[type="text/css"]');
+    styles.forEach((style) => {
+      // clone the style node
+      const newStyle = style.cloneNode(true) as HTMLStyleElement;
+      targetDocument.head.appendChild(newStyle);
+    });
+  } else {
+    const links = document.querySelectorAll('link[rel="stylesheet"]');
+    links.forEach((link) => {
+      // clone the link node
+      const newLink = link.cloneNode(true) as HTMLLinkElement;
+      targetDocument.head.appendChild(newLink);
+    });
   }
-  const styles = getStyles();
-  styles.forEach((style) => {
-    // clone the style node
-    const newStyle = style.cloneNode(true) as HTMLStyleElement;
-    targetDocument.head.appendChild(newStyle);
-  });
 }
 
 function watchStyles(targetDocument: Document) {

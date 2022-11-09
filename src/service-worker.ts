@@ -6,8 +6,8 @@ function getNextData() {
 
 function getColor(size: number) {
   const threshold = getSizeThreshold(size);
-  if (threshold === 0) return "green";
-  if (threshold === 1) return "orange";
+  if (threshold === "small") return "green";
+  if (threshold === "medium") return "orange";
   return "red";
 }
 
