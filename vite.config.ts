@@ -4,6 +4,12 @@ import path from "path";
 import { defineConfig } from "vite";
 
 import manifest from "./manifest.json";
+import packageJson from "./package.json";
+
+const finalManifest = {
+  ...manifest,
+  version: packageJson.version,
+};
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,7 +19,7 @@ export default defineConfig({
   plugins: [
     react(),
     crx({
-      manifest,
+      manifest: finalManifest,
     }),
   ],
 });
