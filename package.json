@@ -19,7 +19,7 @@
     "*.{css,scss,md,mdx,json}": [
       "prettier --write"
     ],
-    "*.{js,jsx,ts,tsx}": [
+    "*.{js,jsx,ts,tsx,cjs}": [
       "eslint --fix",
       "prettier --write"
     ],
