@@ -14,7 +14,7 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-nodejs@v3
         with:
-        node-version: 18.x
+          node-version: 18.x
       - name: Install
         run: yarn install
       - name: Check Format
