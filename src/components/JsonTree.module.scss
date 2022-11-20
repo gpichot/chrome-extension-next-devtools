@@ -1,17 +1,8 @@
-.object {
+.tree {
   font-family: monospace;
 }
-.objectBody,
-.array {
-  padding-left: 1em;
-}
 
-.objectProperty {
-  display: flex;
-  flex-flow: column nowrap;
-}
-
-.objectPropertyIsExpandable .objectPropertyHeader {
+.objectPropertyIsExpandable.objectPropertyHeader {
   cursor: pointer;
 }
 
@@ -28,31 +19,15 @@
     content: ":";
   }
 }
-.objectPropertyValue {
-  padding: 0.25em 0;
-}
-
-.objectPropertyOneLine {
-  display: flex;
-  flex-flow: row nowrap;
-}
-
 .objectPropertyHeader {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-}
-
-.objectPropertyValue {
-  display: none;
+  padding: 0 0.25rem;
 }
 
 .objectPropertySize {
   margin-left: 0.5em;
-}
-
-.objectPropertyValueExpanded {
-  display: block;
 }
 
 .objectPropertyLength {
@@ -121,5 +96,36 @@
   color: #880000;
   @media (prefers-color-scheme: dark) {
     color: #ffcccc;
+  }
+}
+
+.tree {
+  padding-left: 0;
+  li {
+    list-style: none;
+  }
+  .objectPropertyHeader:focus {
+    outline: none;
+    font-weight: bold;
+    background-color: #eeeeee22;
+  }
+
+  li:focus {
+    outline: none;
+    & > .objectPropertyHeader {
+      background-color: #eeeeee22;
+    }
+    & > .objectPropertyHeader .objectPropertyKey {
+      font-weight: bold;
+    }
+  }
+}
+
+.caret {
+  width: 0.8rem;
+  color: #dddddd;
+
+  [aria-expanded="true"] > * > & {
+    opacity: 0.2;
   }
 }

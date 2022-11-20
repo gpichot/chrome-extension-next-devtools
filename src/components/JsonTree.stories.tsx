@@ -1,11 +1,9 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 
 import JsonTree, {
-  JsonTreeArray,
   JsonTreeBoolean,
   JsonTreeNull,
   JsonTreeNumber,
-  JsonTreeObject,
   JsonTreeString,
 } from "./JsonTree";
 
@@ -17,8 +15,6 @@ export default {
     JsonTreeBoolean,
     JsonTreeNumber,
     JsonTreeString,
-    JsonTreeArray,
-    JsonTreeObject,
   },
 } as ComponentMeta<typeof JsonTree>;
 

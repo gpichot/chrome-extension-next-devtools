@@ -12834,6 +12834,11 @@ rc@1.2.8, rc@^1.2.8:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-accessible-treeview@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/react-accessible-treeview/-/react-accessible-treeview-2.3.1.tgz#84a46c6b0457f1ce4ba9d4115cdd402287b74640"
+  integrity sha512-rVTGAJuN0SIl1Ind4jgGLVrU15GQZCzdVbJsJYihIFOMDEJ9L8T+O0m0zh6ro911cfM8VKFnbnJ9PGR5dkvPzA==
+
 react-docgen-typescript@^2.1.1:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/react-docgen-typescript/-/react-docgen-typescript-2.2.2.tgz#4611055e569edc071204aadb20e1c93e1ab1659c"

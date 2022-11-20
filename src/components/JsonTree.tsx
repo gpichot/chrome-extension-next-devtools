@@ -1,4 +1,5 @@
 import React from "react";
+import TreeView, { INode } from "react-accessible-treeview";
 import classnames from "classnames";
 
 import { getSizeThreshold, humanizeSize } from "@/utils";
@@ -7,16 +8,110 @@ import styles from "./JsonTree.module.scss";
 
 type JsonTreeData = unknown;
 
-export default function JsonTree(props: { data: JsonTreeData }) {
+function convertNestedObjectToTree(data: JsonTreeData) {
+  const nodes: INode[] = [];
+  const nodesData: Record<number, unknown> = {};
+  let index = 0;
+
+  const createIndex = () => {
+    return index++;
+  };
+
+  const traverse = (
+    name: string,
+    obj: JsonTreeData,
+    parentId: number | null
+  ): INode => {
+    const id = createIndex();
+
+    const node = {
+      id,
+      name,
+      parent: typeof parentId === "number" ? parentId : null,
+      children: [] as number[],
+    };
+
+    nodesData[id] = obj;
+    nodes.push(node);
+
+    const isObject = typeof obj === "object" && obj !== null;
+    node.children = isObject
+      ? Object.entries(obj)
+          .map(([key, value]) => {
+            return traverse(key, value, id);
+          })
+          .map((node) => node.id)
+      : [];
+
+    return node;
+  };
+
+  traverse("root", data, null);
+
+  return { nodes, nodesData };
+}
+
+export default function BaseJsonTree({ data }: { data: JsonTreeData }) {
+  const { nodes, nodesData } = convertNestedObjectToTree(data);
+
+  return (
+    <TreeView
+      data={nodes}
+      className={styles.tree}
+      nodeRenderer={({
+        element,
+        getNodeProps,
+        isExpanded,
+        isSelected,
+        isBranch,
+        handleExpand,
+      }) => {
+        const value = nodesData[element.id];
+        const isPrimitiveValue = isPrimitiveType(value);
+        const lengthLabel = getLengthLabel(value);
+        const showSize = !isPrimitiveValue || typeof value === "string";
+        const size = JSON.stringify(value).length;
+        const sizeThreshold = getSizeThreshold(size);
+
+        console.log(element.name, isExpanded, isSelected);
+        console.log(element.name, value);
+
+        return (
+          <div
+            {...getNodeProps({ onClick: handleExpand })}
+            className={classnames(styles.objectPropertyHeader, {
+              [styles.objectPropertyIsExpandable]: isBranch,
+              [styles.objectPropertySizeSmall]: sizeThreshold === "small",
+              [styles.objectPropertySizeMedium]: sizeThreshold === "medium",
+              [styles.objectPropertySizeLarge]: sizeThreshold === "large",
+            })}
+          >
+            <div className={styles.caret}>
+              {isBranch && (isExpanded ? "▼" : "▶")}
+            </div>
+            <div className={styles.objectPropertyKey}>{element.name}</div>
+            {lengthLabel && (
+              <div className={styles.objectPropertyLength}>{lengthLabel}</div>
+            )}
+            {showSize && (
+              <div className={styles.objectPropertySize}>
+                <SizeLabel size={size} />
+              </div>
+            )}
+            {isPrimitiveValue && <JsonTreeValue data={value} />}
+          </div>
+        );
+      }}
+    />
+  );
+}
+
+export function JsonTreeValue(props: { data: JsonTreeData }) {
   const { data } = props;
   if (typeof data === "number") return JsonTreeNumber({ data });
   if (typeof data === "string") return JsonTreeString({ data });
   if (typeof data === "boolean") return JsonTreeBoolean({ data });
-  if (Array.isArray(data)) return JsonTreeArray({ data });
   if (data === null) return JsonTreeNull();
-  if (typeof data === "object") {
-    return JsonTreeObject({ data: data as Record<string, JsonTreeData> });
-  }
   return <div>JSON.stringify(data)</div>;
 }
 
@@ -45,16 +140,6 @@ export function JsonTreeString(props: { data: string }) {
 export function JsonTreeBoolean(props: { data: boolean }) {
   return (
     <span className={styles.boolean}>{props.data ? "true" : "false"}</span>
-  );
-}
-
-export function JsonTreeArray(props: { data: unknown[] }) {
-  return (
-    <div className={styles.array}>
-      {props.data.map((item, index) => (
-        <JsonTreeObjectProperty key={index} name={index} value={item} />
-      ))}
-    </div>
   );
 }
 
@@ -90,74 +175,5 @@ function SizeLabel({ size }: { size: number }) {
         unitShortcuts: false,
       })}
     </span>
-  );
-}
-
-function JsonTreeObjectProperty(props: {
-  name: string | number;
-  value: unknown;
-}) {
-  const { name, value } = props;
-  const isPrimitiveValue = isPrimitiveType(value);
-  const [expanded, setExpanded] = React.useState(isPrimitiveValue);
-
-  const lengthLabel = getLengthLabel(value);
-  const showSize = !isPrimitiveValue || typeof value === "string";
-  const isExpandable = !isPrimitiveValue;
-  const toggleExpanded = () => {
-    if (isExpandable) setExpanded((expanded) => !expanded);
-  };
-  const size = JSON.stringify(value).length;
-  const sizeThreshold = getSizeThreshold(size);
-  return (
-    <div
-      className={classnames(styles.objectProperty, {
-        [styles.objectPropertyOneLine]: isPrimitiveValue,
-        [styles.objectPropertyIsExpandable]: isExpandable,
-        [styles.objectPropertySizeSmall]: sizeThreshold === "small",
-        [styles.objectPropertySizeMedium]: sizeThreshold === "medium",
-        [styles.objectPropertySizeLarge]: sizeThreshold === "large",
-      })}
-    >
-      <div
-        className={styles.objectPropertyHeader}
-        role="button"
-        tabIndex={0}
-        aria-expanded={expanded}
-        onClick={toggleExpanded}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") toggleExpanded();
-        }}
-      >
-        <div className={styles.objectPropertyKey}>{name}</div>
-        {lengthLabel && (
-          <div className={styles.objectPropertyLength}>{lengthLabel}</div>
-        )}
-        {showSize && (
-          <div className={styles.objectPropertySize}>
-            <SizeLabel size={size} />
-          </div>
-        )}
-      </div>
-      <div
-        className={classnames(styles.objectPropertyValue, {
-          [styles.objectPropertyValueExpanded]: expanded,
-        })}
-      >
-        <JsonTree data={value} />
-      </div>
-    </div>
-  );
-}
-
-export function JsonTreeObject(props: { data: Record<string, unknown> }) {
-  return (
-    <div className={styles.object}>
-      <div className={styles.objectBody}>
-        {Object.entries(props.data).map(([key, value]) => (
-          <JsonTreeObjectProperty key={key} name={key} value={value} />
-        ))}
-      </div>
-    </div>
   );
 }
