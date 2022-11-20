@@ -6,8 +6,14 @@ import { defineConfig } from "vite";
 import manifest from "./manifest.json";
 import packageJson from "./package.json";
 
+const {
+  $schema: _schema,
+  version: _version,
+  ...manifestWithoutSchemaAndVersion
+} = manifest;
+
 const finalManifest = {
-  ...manifest,
+  ...manifestWithoutSchemaAndVersion,
   version: packageJson.version,
 };
 
