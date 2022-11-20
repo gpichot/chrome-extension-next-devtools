@@ -51,18 +51,29 @@ function convertNestedObjectToTree(data: JsonTreeData) {
   return { nodes, nodesData };
 }
 
-export default function BaseJsonTree({ data }: { data: JsonTreeData }) {
+export default function BaseJsonTree({
+  data,
+  autofocus,
+}: {
+  data: JsonTreeData;
+  autofocus?: boolean;
+}) {
   const { nodes, nodesData } = convertNestedObjectToTree(data);
 
   return (
     <TreeView
+      ref={(ref) => {
+        if (ref && autofocus) {
+          const treeItem = ref.querySelector("[tabindex]");
+          (treeItem as HTMLElement | null)?.focus();
+        }
+      }}
       data={nodes}
       className={styles.tree}
       nodeRenderer={({
         element,
         getNodeProps,
         isExpanded,
-        isSelected,
         isBranch,
         handleExpand,
       }) => {
@@ -72,9 +83,6 @@ export default function BaseJsonTree({ data }: { data: JsonTreeData }) {
         const showSize = !isPrimitiveValue || typeof value === "string";
         const size = JSON.stringify(value).length;
         const sizeThreshold = getSizeThreshold(size);
-
-        console.log(element.name, isExpanded, isSelected);
-        console.log(element.name, value);
 
         return (
           <div

@@ -33,7 +33,7 @@ function App() {
 
   return (
     <div className={styles.container}>
-      <JsonTree data={pagePropsOb} />
+      <JsonTree autofocus data={pagePropsOb} />
     </div>
   );
 }

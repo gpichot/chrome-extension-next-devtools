@@ -20,7 +20,6 @@ export function installStyles(targetDocument: Document) {
 
 function watchStyles(targetDocument: Document) {
   const observer = new MutationObserver((mutations) => {
-    console.log(mutations);
     mutations.forEach((mutation) => {
       if (mutation.type !== "childList") return;
 

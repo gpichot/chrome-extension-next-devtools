@@ -24,6 +24,7 @@ const Template: ComponentStory<typeof JsonTree> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
+  autofocus: true,
   data: {
     null: null,
     boolean: true,
