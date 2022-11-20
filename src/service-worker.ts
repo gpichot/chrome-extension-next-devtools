@@ -13,13 +13,10 @@ function getColor(size: number) {
   return "red";
 }
 
-const tabPageProps = new Map<number, string>();
+async function retrievePageProps(tabId: number): Promise<unknown | null> {
+  const tab = await browser.tabs.get(tabId);
 
-async function onTabUpdated(
-  tabId: number,
-  changeInfo: browser.Tabs.OnUpdatedChangeInfoType
-) {
-  if (changeInfo.status !== "complete") return;
+  if (!tab.url?.startsWith("http")) return null;
 
   const response = await browser.scripting.executeScript({
     target: { tabId: tabId },
@@ -28,55 +25,61 @@ async function onTabUpdated(
 
   const { result = null } = response?.length ? response[0] : {};
 
-  if (!result) {
+  if (!result) return null;
+
+  const jsonOb = JSON.parse(result);
+  return jsonOb.props.pageProps;
+}
+
+/**
+ * This function is called when a tab is updated.
+ *
+ * It detects if the tab contains the __NEXT_DATA__ element and if so, it
+ * updates the badge text with the size of the page props
+ */
+async function onTabUpdated(
+  tabId: number,
+  changeInfo: browser.Tabs.OnUpdatedChangeInfoType
+) {
+  if (changeInfo.status === "complete") {
+    updateBadgeText(tabId);
+  }
+}
+
+async function updateBadgeText(tabId: number) {
+  const json = await retrievePageProps(tabId);
+
+  if (!json) {
     browser.action.disable(tabId);
     return;
   } else {
     browser.action.enable(tabId);
   }
 
-  const json = JSON.stringify(JSON.parse(result).props.pageProps);
-  const size = json.length;
+  const size = JSON.stringify(json).length;
   const humanizedSize = humanizeSize(size);
   const color = getColor(size);
 
   browser.action.setBadgeText({ text: humanizedSize, tabId });
   browser.action.setBadgeBackgroundColor({ color, tabId });
-
-  tabPageProps.set(tabId, json);
 }
 
 async function getCurrentTab() {
-  const queryOptions = { active: true, lastFocusedWindow: true };
-  // `tab` will either be a `tabs.Tab` instance or `undefined`.
+  const queryOptions = { active: true, currentWindow: true };
   const [tab] = await browser.tabs.query(queryOptions);
   return tab;
 }
 
-const currentTab = { id: null as null | number };
-
-getCurrentTab().then((tab) => {
-  if (!tab?.id) return;
-  if (currentTab.id) return;
-  currentTab.id = tab.id;
-});
-
-browser.tabs.onActivated.addListener(({ tabId }) => {
-  currentTab.id = tabId;
-});
-
 browser.runtime.onMessage.addListener((message) => {
   if (message.type !== "getTab") return;
 
-  if (!currentTab.id) {
-    return Promise.resolve({ pageProps: null });
-  }
+  return getCurrentTab().then((tab) => {
+    const tabId = tab?.id;
 
-  const pageProps = tabPageProps.get(currentTab.id);
-  return Promise.resolve({ pageProps });
+    if (!tabId) return { pageProps: null };
+
+    return retrievePageProps(tabId).then((pageProps) => ({ pageProps }));
+  });
 });
 
 browser.tabs.onUpdated.addListener(onTabUpdated);
-browser.tabs.onRemoved.addListener((tabId: number) => {
-  tabPageProps.delete(tabId);
-});

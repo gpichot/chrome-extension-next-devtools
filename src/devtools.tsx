@@ -25,13 +25,16 @@ const emitter = {
 };
 
 function App() {
-  const [pagePropsList, setPagePropsList] = React.useState<PagePropsRequest[]>(
-    []
-  );
+  const [pagePropsList, setPagePropsList] = React.useState<
+    Record<string, PagePropsRequest>
+  >({});
 
   React.useEffect(() => {
     emitter.addListener((request) => {
-      setPagePropsList((list) => [...list, request]);
+      setPagePropsList((list) => ({
+        ...list,
+        [request.url]: request,
+      }));
     });
   }, []);
 
@@ -43,7 +46,7 @@ function App() {
 
   return (
     <DevToolsApp
-      requests={pagePropsList}
+      requests={Object.values(pagePropsList)}
       themeName={browser.devtools.panels.themeName}
     />
   );
@@ -79,10 +82,11 @@ browser.devtools.network.onRequestFinished.addListener(async (requestHar) => {
   const path = url.split("/").slice(2).join("/");
 
   const [content] = await request.getContent();
-  console.log(content);
-  const json = JSON.parse(content);
+  const json = JSON.parse(content) as {
+    pageProps: unknown;
+  } | null;
 
-  if (!json.pageProps) return;
+  if (!json?.pageProps) return;
 
   emitter.emit({
     url: `/${path}`,

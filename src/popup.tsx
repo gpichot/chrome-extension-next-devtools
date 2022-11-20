@@ -24,11 +24,11 @@ function App() {
 
   const pagePropsOb = React.useMemo(() => {
     if (!pageProps) return null;
-    return JSON.parse(pageProps);
+    return pageProps;
   }, [pageProps]);
 
   if (!pagePropsOb) {
-    return <div>Not a page with a table</div>;
+    return <div>Not a page with props</div>;
   }
 
   return (
