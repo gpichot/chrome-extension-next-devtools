@@ -55,7 +55,7 @@ export default function DevToolsApp({
             </h2>
           </div>
           <div className={styles.detailBody}>
-            <JsonTree data={pageProps} />
+            <JsonTree autofocus data={pageProps} />
           </div>
         </div>
       )}
