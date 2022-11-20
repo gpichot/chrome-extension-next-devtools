@@ -1,3 +1,5 @@
+import browser from "webextension-polyfill";
+
 import { getSizeThreshold, humanizeSize } from "./utils";
 
 function getNextData() {
@@ -13,41 +15,41 @@ function getColor(size: number) {
 
 const tabPageProps = new Map<number, string>();
 
-function onTabUpdated(tabId: number, changeInfo: chrome.tabs.TabChangeInfo) {
+async function onTabUpdated(
+  tabId: number,
+  changeInfo: browser.Tabs.OnUpdatedChangeInfoType
+) {
   if (changeInfo.status !== "complete") return;
 
-  chrome.scripting.executeScript(
-    {
-      target: { tabId: tabId },
-      func: getNextData,
-    },
-    (response) => {
-      const { result = null } = response?.length ? response[0] : {};
+  const response = await browser.scripting.executeScript({
+    target: { tabId: tabId },
+    func: getNextData,
+  });
 
-      if (!result) {
-        chrome.action.disable(tabId);
-        return;
-      } else {
-        chrome.action.enable(tabId);
-      }
+  const { result = null } = response?.length ? response[0] : {};
 
-      const json = JSON.stringify(JSON.parse(result).props.pageProps);
-      const size = json.length;
-      const humanizedSize = humanizeSize(size);
-      const color = getColor(size);
+  if (!result) {
+    browser.action.disable(tabId);
+    return;
+  } else {
+    browser.action.enable(tabId);
+  }
 
-      chrome.action.setBadgeText({ text: humanizedSize, tabId });
-      chrome.action.setBadgeBackgroundColor({ color, tabId });
+  const json = JSON.stringify(JSON.parse(result).props.pageProps);
+  const size = json.length;
+  const humanizedSize = humanizeSize(size);
+  const color = getColor(size);
 
-      tabPageProps.set(tabId, json);
-    }
-  );
+  browser.action.setBadgeText({ text: humanizedSize, tabId });
+  browser.action.setBadgeBackgroundColor({ color, tabId });
+
+  tabPageProps.set(tabId, json);
 }
 
 async function getCurrentTab() {
   const queryOptions = { active: true, lastFocusedWindow: true };
   // `tab` will either be a `tabs.Tab` instance or `undefined`.
-  const [tab] = await chrome.tabs.query(queryOptions);
+  const [tab] = await browser.tabs.query(queryOptions);
   return tab;
 }
 
@@ -59,19 +61,22 @@ getCurrentTab().then((tab) => {
   currentTab.id = tab.id;
 });
 
-chrome.tabs.onActivated.addListener(({ tabId }) => {
+browser.tabs.onActivated.addListener(({ tabId }) => {
   currentTab.id = tabId;
 });
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === "getTab") {
-    if (!currentTab.id) return sendResponse({ pageProps: null });
-    const pageProps = tabPageProps.get(currentTab.id);
-    sendResponse({ pageProps });
+browser.runtime.onMessage.addListener((message) => {
+  if (message.type !== "getTab") return;
+
+  if (!currentTab.id) {
+    return Promise.resolve({ pageProps: null });
   }
+
+  const pageProps = tabPageProps.get(currentTab.id);
+  return Promise.resolve({ pageProps });
 });
 
-chrome.tabs.onUpdated.addListener(onTabUpdated);
-chrome.tabs.onRemoved.addListener((tabId: number) => {
+browser.tabs.onUpdated.addListener(onTabUpdated);
+browser.tabs.onRemoved.addListener((tabId: number) => {
   tabPageProps.delete(tabId);
 });

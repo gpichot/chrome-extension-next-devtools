@@ -1,15 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import classnames from "classnames";
+import browser from "webextension-polyfill";
+import { DevtoolsNetwork } from "webextension-polyfill/namespaces/devtools_network";
 
 import "./devtools.css";
 
 import DevToolsApp from "./components/DevToolsApp";
-import PropsRequestTable from "./components/PropsRequestTable";
 import { installStyles } from "./devtoolsStyles";
 import { PagePropsRequest } from "./types";
-
-import styles from "./devtools.module.scss";
 
 type Listener = (request: PagePropsRequest) => void;
 
@@ -38,7 +36,7 @@ function App() {
   }, []);
 
   React.useEffect(() => {
-    const themeName = chrome.devtools.panels.themeName;
+    const themeName = browser.devtools.panels.themeName;
 
     document.body.classList.add(`themeName-${themeName}`);
   }, []);
@@ -46,16 +44,17 @@ function App() {
   return (
     <DevToolsApp
       requests={pagePropsList}
-      themeName={chrome.devtools.panels.themeName}
+      themeName={browser.devtools.panels.themeName}
     />
   );
 }
 
-chrome.devtools.panels.create(
-  "NextJS",
-  "icon.png",
-  "/src/panel.html",
-  (panel) => {
+const isDev = process.env.NODE_ENV === "development";
+const panelNameSuffix = isDev ? "NextJS (Dev)" : "NextJS";
+
+browser.devtools.panels
+  .create(panelNameSuffix, "icon.png", "/src/panel.html")
+  .then((panel) => {
     panel.onShown.addListener((window) => {
       const root = ReactDOM.createRoot(
         window.document.getElementById("root") as HTMLElement
@@ -64,28 +63,30 @@ chrome.devtools.panels.create(
 
       installStyles(window.document);
     });
-  }
-);
+  });
 
-chrome.devtools.network.onNavigated.addListener((url) => {
+browser.devtools.network.onNavigated.addListener((url) => {
   console.log("Navigated to: " + url);
 });
-chrome.devtools.network.onRequestFinished.addListener((request) => {
-  if (request.request.url.includes("/_next/data")) {
-    // cut at /_next/data
-    const url = request.request.url.split("/_next/data")[1];
-    const path = url.split("/").slice(2).join("/");
 
-    request.getContent((content) => {
-      const json = JSON.parse(content);
+browser.devtools.network.onRequestFinished.addListener(async (requestHar) => {
+  const request = requestHar as DevtoolsNetwork.Request & HARFormatEntry;
 
-      if (!json.pageProps) return;
+  if (!request.request.url.includes("/_next/data")) return;
 
-      emitter.emit({
-        url: `/${path}`,
-        status: request.response.status,
-        content: json,
-      });
-    });
-  }
+  // cut at /_next/data
+  const url = request.request.url.split("/_next/data")[1];
+  const path = url.split("/").slice(2).join("/");
+
+  const [content] = await request.getContent();
+  console.log(content);
+  const json = JSON.parse(content);
+
+  if (!json.pageProps) return;
+
+  emitter.emit({
+    url: `/${path}`,
+    status: request.response.status,
+    content: json,
+  });
 });

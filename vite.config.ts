@@ -9,11 +9,15 @@ import packageJson from "./package.json";
 const {
   $schema: _schema,
   version: _version,
+  name,
   ...manifestWithoutSchemaAndVersion
 } = manifest;
 
+const isDev = process.env.NODE_ENV === "development";
+const nameSuffix = isDev ? "" : " (Dev)";
 const finalManifest = {
   ...manifestWithoutSchemaAndVersion,
+  name: `${name}${nameSuffix}`,
   version: packageJson.version,
 };
 

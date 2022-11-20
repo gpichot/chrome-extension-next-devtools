@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import browser from "webextension-polyfill";
 
 import "./globals.css";
 
@@ -15,7 +16,7 @@ function App() {
   const [pageProps, setPageProps] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    chrome.runtime.sendMessage({ type: "getTab" }, (message) => {
+    browser.runtime.sendMessage({ type: "getTab" }).then((message) => {
       const { pageProps } = message;
       setPageProps(pageProps);
     });
