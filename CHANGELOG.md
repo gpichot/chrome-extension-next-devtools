@@ -1,3 +1,18 @@
+# [1.1.0](https://github.com/gpichot/chrome-extension-next-devtools/compare/v1.0.0...v1.1.0) (2022-11-21)
+
+
+### Bug Fixes
+
+* run script in chrome pages ([6a2bf93](https://github.com/gpichot/chrome-extension-next-devtools/commit/6a2bf93f61fc0740f61c67b1b0d2332e64ccad24))
+
+
+### Features
+
+* autofocus first in popup ([8f7c9fc](https://github.com/gpichot/chrome-extension-next-devtools/commit/8f7c9fcb2300430d5d2d9f23825412b1d44bce22))
+* **darkmode:** improve darkmode ([34af2e6](https://github.com/gpichot/chrome-extension-next-devtools/commit/34af2e6b20c9fdbc3a5bb235ebef87cf453d0caa))
+* **devtools:** autofocus in detail view ([d3204e5](https://github.com/gpichot/chrome-extension-next-devtools/commit/d3204e5794341add08db7772f22c4bde64f9c592))
+* use react-accessible-treeview ([d4b99a0](https://github.com/gpichot/chrome-extension-next-devtools/commit/d4b99a0866e7b1e6d0daec1927463633bed2b5ff))
+
 # 1.0.0 (2022-11-09)
 
 
