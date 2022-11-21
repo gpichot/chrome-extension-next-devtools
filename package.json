@@ -85,6 +85,7 @@
     "prettier": "^2.7.1",
     "sass": "^1.55.0",
     "semantic-release": "^19.0.5",
+    "semantic-release-chrome": "^3.1.0",
     "sort-package-json": "^2.0.0",
     "ts-jest": "^29.0.3",
     "typed-scss-modules": "^7.0.1",
