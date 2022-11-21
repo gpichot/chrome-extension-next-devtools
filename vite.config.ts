@@ -14,7 +14,7 @@ const {
 } = manifest;
 
 const isDev = process.env.NODE_ENV === "development";
-const nameSuffix = isDev ? "" : " (Dev)";
+const nameSuffix = !isDev ? "" : " (Dev)";
 const finalManifest = {
   ...manifestWithoutSchemaAndVersion,
   name: `${name}${nameSuffix}`,
