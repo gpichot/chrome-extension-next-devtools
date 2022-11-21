@@ -1,5 +1,6 @@
 .tree {
   font-family: monospace;
+  margin: 0;
 }
 
 .objectPropertyIsExpandable.objectPropertyHeader {
@@ -10,10 +11,7 @@
   flex: 0 0 auto;
   margin-right: 0.5em;
   padding: 0.25em 0;
-  color: #333333;
-  @media (prefers-color-scheme: dark) {
-    color: #dddddd;
-  }
+  color: var(--text-color-2);
 
   &:after {
     content: ":";
@@ -31,29 +29,23 @@
 }
 
 .objectPropertyLength {
-  color: #888888;
-  @media (prefers-color-scheme: dark) {
-    color: #bbbbbb;
-  }
+  color: var(--text-color-3);
 }
 
 .number {
-  color: #ff8c00;
+  color: var(--json-number-color);
 }
 
 .null {
-  color: #999999;
+  color: var(--json-null-color);
 }
 
 .boolean {
-  color: #0000ff;
+  color: var(--json-boolean-color);
 }
 
 .string {
-  color: #008000;
-  @media (prefers-color-scheme: dark) {
-    color: #00aa00;
-  }
+  color: var(--json-string-color);
 }
 
 .sizeLabel {
@@ -61,42 +53,27 @@
 }
 
 .sizeLabelSmall {
-  color: #448844;
-  @media (prefers-color-scheme: dark) {
-    color: #88cc88;
-  }
+  color: var(--threshold-color-small);
 }
 .sizeLabelMedium {
-  color: #888800;
-  @media (prefers-color-scheme: dark) {
-    color: #cccc00;
-  }
+  color: var(--threshold-color-medium);
 }
 .sizeLabelLarge {
-  color: #880000;
-  @media (prefers-color-scheme: dark) {
-    color: #cc0000;
-  }
+  color: var(--threshold-color-large);
 }
 
-.objectPropertySizeSmall > .objectPropertyHeader > .objectPropertyKey {
-  // color: #448844;
+.objectPropertySizeSmall > .objectPropertyKey {
+  color: var(--property-size-small);
 }
 
-.objectPropertySizeMedium > .objectPropertyHeader > .objectPropertyKey {
+.objectPropertySizeMedium > .objectPropertyKey {
   font-weight: bold;
-  color: #888800;
-  @media (prefers-color-scheme: dark) {
-    color: #cccc00;
-  }
+  color: var(--property-size-medium);
 }
 
-.objectPropertySizeLarge > .objectPropertyHeader > .objectPropertyKey {
+.objectPropertySizeLarge > .objectPropertyKey {
   font-weight: bold;
-  color: #880000;
-  @media (prefers-color-scheme: dark) {
-    color: #ffcccc;
-  }
+  color: var(--property-size-large);
 }
 
 .tree {
@@ -107,13 +84,13 @@
   .objectPropertyHeader:focus {
     outline: none;
     font-weight: bold;
-    background-color: #eeeeee22;
+    background-color: var(--highlight-color);
   }
 
   li:focus {
     outline: none;
     & > .objectPropertyHeader {
-      background-color: #eeeeee22;
+      background-color: var(--highlight-color);
     }
     & > .objectPropertyHeader .objectPropertyKey {
       font-weight: bold;
@@ -123,7 +100,7 @@
 
 .caret {
   width: 0.8rem;
-  color: #dddddd;
+  color: var(--caret-color);
 
   [aria-expanded="true"] > * > & {
     opacity: 0.2;

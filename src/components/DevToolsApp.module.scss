@@ -3,6 +3,8 @@
   flex-flow: row nowrap;
   height: 100vh;
   align-items: stretch;
+  background-color: var(--background-color);
+  color: var(--foreground-color);
 }
 
 .detailBody {
@@ -15,33 +17,22 @@
 
 .detail {
   flex: 1 0;
-  background-color: #f5f5f5;
-  border-left: 1px solid #e5e5e5;
-  color: #333;
+  background-color: var(--detail-background-color);
+  border-left: 1px solid var(--detail-border-color);
+  color: var(--detail-text-color);
   overflow-y: auto;
+  font-size: 0.8rem;
 }
 
 .detailHeader {
-  background-color: #555555;
-  border-bottom: 1px solid #e5e5e511;
+  background-color: var(--detail-header-background-color);
+  border-bottom: 1px solid var(--detail-header-border-color);
 
   h2 {
     padding: 0.25rem;
     margin: 0;
     font-weight: normal;
     font-size: 0.8rem;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .masterDetail {
-    background-color: #333;
-    color: #fff;
-  }
-  .detail {
-    color: #fff;
-    background-color: #444444;
-    border-left: 1px solid #555555;
   }
 }
 

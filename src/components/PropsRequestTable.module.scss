@@ -3,10 +3,7 @@
   border-collapse: collapse;
 
   thead {
-    border-bottom: 1px solid #e5e5e5;
-    @media (prefers-color-scheme: dark) {
-      border-bottom: 1px solid #55555544;
-    }
+    border-bottom: 1px solid var(--table-border-color);
   }
 
   th {
@@ -19,35 +16,26 @@
     padding: 0.25rem 0.5rem;
     font-size: 0.7rem;
     &:not(:last-child) {
-      border-right: 1px solid #e5e5e5;
-      @media (prefers-color-scheme: dark) {
-        border-right: 1px solid #55555544;
-      }
+      border-right: 1px solid var(--table-border-color);
     }
   }
 
   tbody tr:nth-child(odd) {
-    background-color: #f0f0f0;
-    @media (prefers-color-scheme: dark) {
-      background-color: #444444;
-    }
+    background-color: var(--table-alternate-background-color);
   }
 }
 .table tbody tr.requestRowSelected {
-  background-color: #e0f0ff;
-  @media (prefers-color-scheme: dark) {
-    background-color: #1a73e8;
-  }
+  background-color: var(--table-active-color);
 }
 
 .table tbody tr:not(.requestRowSelected) {
   &.requestRowSizeSmall :last-child {
+    background-color: var(--table-row-size-small);
   }
   &.requestRowSizeMedium :last-child {
-    background-color: #c28149;
+    background-color: var(--table-row-size-medium);
   }
   &.requestRowSizeLarge :last-child {
-    // even darker
-    background-color: #e57373;
+    background-color: var(--table-row-size-large);
   }
 }

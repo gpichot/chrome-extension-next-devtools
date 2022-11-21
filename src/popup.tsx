@@ -3,14 +3,30 @@ import ReactDOM from "react-dom/client";
 import browser from "webextension-polyfill";
 
 import "./globals.css";
+import "./popup.css";
 
 import JsonTree from "./components/JsonTree";
-
-import styles from "./popup.module.scss";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
+function useThemeMode() {
+  const [theme, setTheme] = React.useState<"light" | "dark">("light");
+
+  React.useEffect(() => {
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        setTheme(e.matches ? "dark" : "light");
+      });
+    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    setTheme(isDark ? "dark" : "light");
+  }, []);
+
+  return theme;
+}
 
 function App() {
   const [pageProps, setPageProps] = React.useState<string | null>(null);
@@ -22,25 +38,20 @@ function App() {
     });
   }, []);
 
-  const pagePropsOb = React.useMemo(() => {
-    if (!pageProps) return null;
-    return pageProps;
-  }, [pageProps]);
+  const theme = useThemeMode();
 
-  if (!pagePropsOb) {
+  if (!pageProps) {
     return <div>Not a page with props</div>;
   }
 
   return (
-    <div className={styles.container}>
-      <JsonTree autofocus data={pagePropsOb} />
+    <div data-theme={theme} className="popup">
+      <JsonTree autofocus data={pageProps} />
     </div>
   );
 }
 root.render(
   <React.StrictMode>
-    <div className={styles.popup}>
-      <App />
-    </div>
+    <App />
   </React.StrictMode>
 );

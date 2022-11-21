@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import browser from "webextension-polyfill";
 import { DevtoolsNetwork } from "webextension-polyfill/namespaces/devtools_network";
 
+import "./globals.css";
 import "./devtools.css";
 
 import DevToolsApp from "./components/DevToolsApp";
@@ -38,17 +39,15 @@ function App() {
     });
   }, []);
 
-  React.useEffect(() => {
-    const themeName = browser.devtools.panels.themeName;
-
-    document.body.classList.add(`themeName-${themeName}`);
-  }, []);
+  const themeName = browser.devtools.panels.themeName;
 
   return (
-    <DevToolsApp
-      requests={Object.values(pagePropsList)}
-      themeName={browser.devtools.panels.themeName}
-    />
+    <div data-theme={themeName}>
+      <DevToolsApp
+        requests={Object.values(pagePropsList)}
+        themeName={browser.devtools.panels.themeName}
+      />
+    </div>
   );
 }
 
