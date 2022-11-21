@@ -1,3 +1,15 @@
+# [1.2.0](https://github.com/gpichot/chrome-extension-next-devtools/compare/v1.1.0...v1.2.0) (2022-11-21)
+
+
+### Bug Fixes
+
+* name generation ([2e7420f](https://github.com/gpichot/chrome-extension-next-devtools/commit/2e7420fc126aac4f2a9a66a754592cfc79e120a7))
+
+
+### Features
+
+* hello-world ([b240863](https://github.com/gpichot/chrome-extension-next-devtools/commit/b240863733c5b9d9935e2fa97c558c1c46ade005))
+
 # [1.1.0](https://github.com/gpichot/chrome-extension-next-devtools/compare/v1.0.0...v1.1.0) (2022-11-21)
 
 
