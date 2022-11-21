@@ -2,6 +2,9 @@ name: Release with Semantic Release
 
 on: workflow_dispatch
 
+env:
+  HUSKY_SKIP_INSTALL: 1
+
 jobs:
   release:
     name: Release package
