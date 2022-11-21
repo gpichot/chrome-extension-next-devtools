@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/gpichot/chrome-extension-next-devtools/compare/v1.1.0...v1.1.1) (2022-11-21)
+
+
+### Bug Fixes
+
+* name generation ([9e53c67](https://github.com/gpichot/chrome-extension-next-devtools/commit/9e53c670930c809d7e2697dd95017b8edf659dc3))
+
 # [1.1.0](https://github.com/gpichot/chrome-extension-next-devtools/compare/v1.0.0...v1.1.0) (2022-11-21)
 
 
