@@ -1,4 +1,4 @@
-const chromeAssetName = "NextJS-DevTools-${nextRelease.version}.zip";
+const assetName = "NextJS-DevTools.zip";
 module.exports = {
   branches: ["main"],
   repositoryUrl: "https://github.com/gpichot/chrome-extension-next-devtools",
@@ -18,13 +18,19 @@ module.exports = {
     [
       "semantic-release-chrome",
       {
-        asset: chromeAssetName,
+        asset: assetName,
       },
     ],
     [
       "@semantic-release/github",
       {
-        assets: [chromeAssetName],
+        assets: [
+          {
+            path: assetName,
+            name: "NextJS-DevTools-${nextRelease.version}.zip",
+            label: "NextJS DevTools ${nextRelease.version} Chrome Extension",
+          },
+        ],
       },
     ],
   ],
