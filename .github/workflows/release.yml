@@ -4,6 +4,7 @@ on: workflow_dispatch
 
 env:
   HUSKY_SKIP_INSTALL: 1
+  HUSKY_SKIP_HOOKS: 1
 
 jobs:
   release:
